@@ -1,13 +1,29 @@
-import logo from "./logo.svg"
-import "./App.css"
+import React from 'react'
+import './App.css'
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: 'AIzaSyAe5hM_oNjeizF2ESBGTtl8bWtzUvCCatE',
+  authDomain: 'simple-login-4ebae.firebaseapp.com',
+  projectId: 'simple-login-4ebae',
+  storageBucket: 'simple-login-4ebae.appspot.com',
+  messagingSenderId: '746918235872',
+  appId: '1:746918235872:web:24410233850db1aa164a85',
+}
 
 function Form({ handleForm, submitText }) {
   function handleFormSubmit(event) {
     event.preventDefault()
-    const { username, password } = event.target.elements
+    const { email, password } = event.target.elements
 
     handleForm({
-      username: username.value,
+      email: email.value,
       password: password.value,
     })
   }
@@ -16,7 +32,7 @@ function Form({ handleForm, submitText }) {
     <div>
       <form onSubmit={handleFormSubmit}>
         <div>
-          <input type="text" id="username" placeholder="username" />
+          <input type="email" id="email" placeholder="email" />
         </div>
         <div>
           <input type="password" name="password" id="password" />
@@ -28,12 +44,21 @@ function Form({ handleForm, submitText }) {
 }
 
 function App() {
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig)
+  const auth = getAuth(app)
+
   function login(formData) {
-    console.log("login", formData)
+    console.log('login', formData)
   }
 
   function register(formData) {
-    console.log("register", formData)
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        const { user } = userCredential
+        console.log(user)
+      })
+      .catch((err) => err.message)
   }
 
   return (
